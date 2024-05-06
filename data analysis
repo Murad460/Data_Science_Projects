@@ -1,0 +1,272 @@
+# %% [code] {"execution":{"iopub.status.busy":"2024-05-06T16:45:49.223504Z","iopub.execute_input":"2024-05-06T16:45:49.224619Z","iopub.status.idle":"2024-05-06T16:45:49.230886Z","shell.execute_reply.started":"2024-05-06T16:45:49.224586Z","shell.execute_reply":"2024-05-06T16:45:49.229717Z"}}
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+from sklearn.linear_model import LinearRegression,LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier,StackingClassifier,VotingClassifier
+from sklearn.tree import DecisionTreeClassifier
+import tensorflow as tf 
+import keras 
+from keras.models import Sequential
+from keras.layers import Dense,Dropout,Conv2D,MaxPooling2D,Flatten
+from sklearn.impute import SimpleImputer
+import seaborn as sns
+import plotly.express as pt
+
+# %% [code] {"execution":{"iopub.status.busy":"2024-05-06T16:45:49.286414Z","iopub.execute_input":"2024-05-06T16:45:49.286718Z","iopub.status.idle":"2024-05-06T16:45:51.826658Z","shell.execute_reply.started":"2024-05-06T16:45:49.286684Z","shell.execute_reply":"2024-05-06T16:45:51.825897Z"}}
+df_train=pd.read_csv("/kaggle/input/planttraits2024/train.csv")
+
+# %% [code] {"execution":{"iopub.status.busy":"2024-05-06T16:45:51.828774Z","iopub.execute_input":"2024-05-06T16:45:51.829468Z","iopub.status.idle":"2024-05-06T16:45:52.469405Z","shell.execute_reply.started":"2024-05-06T16:45:51.829433Z","shell.execute_reply":"2024-05-06T16:45:52.468556Z"}}
+df_train.describe()
+
+# %% [code] {"execution":{"iopub.status.busy":"2024-05-06T16:45:52.470581Z","iopub.execute_input":"2024-05-06T16:45:52.470883Z","iopub.status.idle":"2024-05-06T16:45:56.493985Z","shell.execute_reply.started":"2024-05-06T16:45:52.470858Z","shell.execute_reply":"2024-05-06T16:45:56.493134Z"}}
+cry=df_train.corr()
+cry
+
+# %% [code] {"execution":{"iopub.status.busy":"2024-05-06T16:45:56.494989Z","iopub.execute_input":"2024-05-06T16:45:56.495238Z","iopub.status.idle":"2024-05-06T16:45:56.510598Z","shell.execute_reply.started":"2024-05-06T16:45:56.495216Z","shell.execute_reply":"2024-05-06T16:45:56.509647Z"}}
+df_train.isnull().sum()
+
+# %% [code] {"execution":{"iopub.status.busy":"2024-05-06T16:45:56.513148Z","iopub.execute_input":"2024-05-06T16:45:56.513413Z","iopub.status.idle":"2024-05-06T16:45:56.747051Z","shell.execute_reply.started":"2024-05-06T16:45:56.513390Z","shell.execute_reply":"2024-05-06T16:45:56.746251Z"}}
+simp_imput=SimpleImputer(missing_values=np.nan, strategy='mean')
+simp_imput.fit(df_train)
+simp_df_train=simp_imput.transform(df_train)
+
+df_train
+X=simp_df_train
+Y=simp_df_train
+
+# %% [code] {"execution":{"iopub.status.busy":"2024-05-06T16:45:56.748090Z","iopub.execute_input":"2024-05-06T16:45:56.748347Z","iopub.status.idle":"2024-05-06T16:47:04.773475Z","shell.execute_reply.started":"2024-05-06T16:45:56.748324Z","shell.execute_reply":"2024-05-06T16:47:04.772599Z"}}
+# plt.figure(5,5)
+sns.heatmap(cry,annot=True,linewidths=5)
+
+# %% [code]
+px=pt.histogram(simp_df_train)
+px.show()
+
+# %% [code]
+px=pt.boxplot(simp_df_train)
+
+# %% [code]
+X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.2)
+lin_reg=LinearRegression()
+lin_reg.fit(X_train,Y_train)
+predict=lin_reg.predict(X_test)
+# print(predict)
+lin_reg.score(X_test,Y_test)
+
+# %% [code]
+df_train.isnull().sum()
+
+# %% [code]
+X=df_train.loc[:]
+
+# %% [code]
+df_test=pd.read_csv("/kaggle/input/planttraits2024/test.csv")
+# print(lin_reg.predict(df_test))
+
+# %% [code]
+df_test.isnull().sum()
+
+# %% [code]
+sample=pd.read_csv("/kaggle/input/planttraits2024/sample_submission.csv")
+
+# %% [code]
+sample.isnull().sum()
+
+# %% [code]
+# X_train,X_test,Y_train,Y_test=train_test_split(train,test)
+sample
+
+# %% [code]
+test
+
+# %% [code]
+train
+
+# %% [code]
+lin_reg=LinearRegression()
+lin_reg.fit(train)
+
+# %% [code]
+train_image=pd.read_csv("/kaggle/input/planttraits2024/train_images")
+
+# %% [code]
+from PIL import Image
+
+# %% [code]
+img=Image.open("/kaggle/input/planttraits2024/train_images")
+
+# %% [code]
+import os
+
+import cv2
+
+# Set the path to the folder containing the images
+
+path = "/kaggle/input/planttraits2024/train_images"
+
+# List the files in the folder
+
+files = os.listdir(path)
+
+# Read the first three images
+for file in files:
+
+# Construct the full path to the file
+
+    file_path = os.path.join(path, file)
+
+# Read the image
+
+img = cv2.imread(file_path)
+print(len(img))
+X_img=img
+Y_img=img
+img.shape
+
+# %% [code]
+X_train,X_test,Y_train,Y_test=train_test_split(X_img,Y_img)
+
+# %% [code]
+deep_model=Sequential([
+            
+            Conv2D(60,(3,3),activation="relu",input_shape=(416,416,3)),
+            Conv2D(120,(3,3),activation="relu"),
+            MaxPooling2D((2,2)),
+            Dropout(0.5),
+            Conv2D(240,(3,3),activation="relu"),
+            Conv2D(480,(3,3),activation="relu"),
+            MaxPooling2D((2,2)),
+            Dropout(0.5),
+            Flatten(),
+            Dense(480,activation="relu"),
+            Dense(1,activation="softmax")])
+
+# %% [code]
+deep_model.compile(loss="sparse_categorical_crossentropy",optimizer="Adam",metrics=['accuracy'])
+
+# %% [code]
+deep_model.fit(X_train,Y_train)
+
+# %% [code]
+print(deep_model.summary())
+
+# %% [code]
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
+# Define the CNN architecture
+model = models.Sequential()
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(128, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Flatten())
+model.add(layers.Dense(128, activation='relu'))
+model.add(layers.Dense(10, activation='softmax'))  # Assuming 10 classes for classification
+
+# Compile the model
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+model.fit(X_train,Y_train)
+# Load your dataset (e.g., CIFAR-10)
+# X_train, y_train, X_test, y_test = load_data()
+
+# Train the model
+# model.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test))
+
+# Evaluate the model
+# test_loss, test_acc = model.evaluate(X_test, y_test)
+# print(f"Test accuracy: {test_acc:.4f}")
+
+# Make predictions
+# predictions = model.predict(X_test)
+
+# Adjust the architecture, hyperparameters, and dataset according to your specific task.
+
+
+# %% [code]
+from sklearn.decomposition import PCA
+from sklearn.datasets import load_sample_image
+import matplotlib.pyplot as plt
+
+# Load an example image (e.g., a flower)
+# flower = load_sample_image("flower.jpg")
+flower=img
+
+# Reshape the image into a 2D array (rows x columns x channels)
+n_samples, n_features, _ = img.shape
+X = flower.reshape(n_samples,-1)
+
+# Apply PCA to reduce dimensions
+n_components = 500  # Choose the desired number of components
+pca = PCA(n_components=n_components)
+X_reduced = pca.fit_transform(X)
+
+# Inverse transform to get the compressed image
+X_compressed = pca.inverse_transform(X_reduced)
+compressed_image = X_compressed.reshape(flower.shape)
+
+# Display the original and compressed images
+plt.figure(figsize=(8, 4))
+plt.subplot(1, 2, 1)
+plt.imshow(flower)
+plt.title("Original Image")
+plt.axis("off")
+plt.subplot(1, 2, 2)
+plt.imshow(compressed_image)
+plt.title(f"Compressed Image ({n_components} components)")
+plt.axis("off")
+plt.show()
+
+
+# %% [code]
+X_reduced.shape()
+
+# %% [code]
+comp_img_array=np.asarray(compressed_image)
+comp_img_array.shape
+
+# %% [code]
+plt.imshow(comp_img_array)
+
+# %% [code]
+import cv2
+
+# Load your image (replace 'your_image.jpg' with the actual image path)
+# image = cv2.imread('your_image.jpg')
+
+# Resize to a specific size (e.g., 416x416)
+resized_image = cv2.resize(compressed_image, (416, 416))
+
+# Alternatively, resize while maintaining aspect ratio
+# (you may need to pad the image to reach the desired size)
+# ...
+
+# Use 'resized_image' in your model
+resized_image.shape
+
+# %% [code]
+import matplotlib.pyplot as plt 
+plt.imread(resized_image)
+
+# %% [code]
+X_img=resized_image
+Y_img=resized_image
+X_img.shape
+
+# %% [code]
+X_train,X_test,Y_train,Y_test=train_test_split(X_img,Y_img)
+
+# %% [code]
+deep_model.summary()
+
+# %% [code]
+deep_model.fit(X_train,Y_train)
+
+# %% [code]
